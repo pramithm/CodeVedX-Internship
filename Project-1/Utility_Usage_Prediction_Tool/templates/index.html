@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Dashboard - Predictive Analytics</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Set up month name array helper -->
+    {% set month_names = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] %}
+
+    <!-- Flash Messages Toast Notification -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="toast-container">
+          {% for category, message in messages %}
+            <div class="custom-toast" role="alert" aria-live="assertive" aria-atomic="true">
+              {% if category == 'success' %}
+                <i class="bi bi-check-circle-fill text-success fs-4"></i>
+              {% elif category == 'warning' or category == 'danger' %}
+                <i class="bi bi-exclamation-triangle-fill text-warning fs-4"></i>
+              {% else %}
+                <i class="bi bi-info-circle-fill text-info fs-4"></i>
+              {% endif %}
+              <div>
+                <h6 class="mb-0 fw-bold text-dark">{{ message }}</h6>
+              </div>
+              <button type="button" class="btn-close ms-auto" onclick="this.parentElement.remove()" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Mobile Top Navigation Bar -->
+    <header class="d-md-none bg-white border-bottom p-3 d-flex justify-content-between align-items-center sticky-top">
+        <div class="d-flex align-items-center gap-2">
+            <div class="bg-primary bg-opacity-10 p-2 rounded-3 border border-primary border-opacity-25">
+                <i class="bi bi-lightning-charge-fill fs-5 text-primary"></i>
+            </div>
+            <h5 class="sidebar-logo mb-0">UtilityPredict</h5>
+        </div>
+        <button class="btn btn-outline-secondary btn-sm border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
+            <i class="bi bi-list fs-3"></i>
+        </button>
+    </header>
+
+    <!-- Mobile Navigation Drawer (Offcanvas) -->
+    <div class="offcanvas offcanvas-start d-md-none" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
+        <div class="offcanvas-header border-bottom">
+            <div class="d-flex align-items-center gap-2">
+                <div class="bg-primary bg-opacity-10 p-2 rounded-3 border border-primary border-opacity-25">
+                    <i class="bi bi-lightning-charge-fill fs-5 text-primary"></i>
+                </div>
+                <h5 class="offcanvas-title sidebar-logo" id="mobileSidebarLabel">UtilityPredict</h5>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column justify-content-between p-4">
+            <nav class="nav flex-column">
+                <a class="nav-item active" data-bs-dismiss="offcanvas"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+                <a class="nav-item" data-bs-toggle="modal" data-bs-target="#addRecordModal" data-bs-dismiss="offcanvas"><i class="bi bi-plus-circle-fill"></i>Add Record</a>
+                <a class="nav-item" href="#analyticsSection" data-bs-dismiss="offcanvas"><i class="bi bi-graph-up"></i>Analytics</a>
+                <a class="nav-item" href="#recordsSection" data-bs-dismiss="offcanvas"><i class="bi bi-table"></i>Records Table</a>
+            </nav>
+            <div class="pt-4 border-top border-secondary border-opacity-10">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="avatar bg-secondary bg-opacity-25 rounded-circle p-2" style="width: 40px; height: 40px; display:flex; align-items:center; justify-content:center;">
+                        <i class="bi bi-person-fill text-muted"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 text-dark small">Workspace User</h6>
+                        <span class="text-muted small">Internship Project</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <aside class="sidebar p-4 d-none d-md-block">
+            <div class="d-flex align-items-center gap-3 mb-5">
+                <div class="bg-primary bg-opacity-10 p-2 rounded-3 border border-primary border-opacity-25">
+                    <i class="bi bi-lightning-charge-fill fs-4 text-primary"></i>
+                </div>
+                <h4 class="sidebar-logo mb-0">UtilityPredict</h4>
+            </div>
+            
+            <nav class="nav flex-column">
+                <a class="nav-item active"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+                <a class="nav-item" data-bs-toggle="modal" data-bs-target="#addRecordModal"><i class="bi bi-plus-circle-fill"></i>Add Record</a>
+                <a class="nav-item" href="#analyticsSection"><i class="bi bi-graph-up"></i>Analytics</a>
+                <a class="nav-item" href="#recordsSection"><i class="bi bi-table"></i>Records Table</a>
+            </nav>
+            
+            <div class="mt-auto pt-5 border-top border-secondary border-opacity-10 position-absolute bottom-0 mb-4" style="width: 232px;">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="avatar bg-secondary bg-opacity-25 rounded-circle p-2" style="width: 40px; height: 40px; display:flex; align-items:center; justify-content:center;">
+                        <i class="bi bi-person-fill text-muted"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 text-dark small">Workspace User</h6>
+                        <span class="text-muted small">Internship Project</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-grow-1 p-4 p-md-5">
+            <!-- Header/Topbar -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-5">
+                <div>
+                    <h1 class="fw-extrabold text-dark mb-1">Utility Dashboard</h1>
+                    <p class="text-muted mb-0">Monitor utility usage trends and train predictive ML models.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary-gradient" data-bs-toggle="modal" data-bs-target="#addRecordModal">
+                        <i class="bi bi-plus-lg me-2"></i>Add Usage Record
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stat Cards Grid -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="glass-card d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted small fw-bold text-uppercase tracking-wider">Total Records</span>
+                            <h2 class="fw-bold mt-2 mb-0 text-dark">{{ total_records }}</h2>
+                        </div>
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-4 border border-primary border-opacity-10">
+                            <i class="bi bi-database-fill text-primary fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="glass-card d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted small fw-bold text-uppercase tracking-wider">Model Status</span>
+                            <div class="mt-2">
+                                {% if model_status == 'Trained' %}
+                                  <span class="status-badge trained"><i class="bi bi-cpu-fill"></i> Trained</span>
+                                {% else %}
+                                  <span class="status-badge not-trained"><i class="bi bi-clock-history"></i> Not Trained</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="bg-info bg-opacity-10 p-3 rounded-4 border border-info border-opacity-10">
+                            <i class="bi bi-cpu-fill text-info fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="glass-card d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted small fw-bold text-uppercase tracking-wider">Latest Prediction</span>
+                            <h2 class="fw-bold mt-2 mb-0 text-dark">
+                                {% if prediction is not none %}
+                                    <span class="text-success">{{ prediction }}</span> <span style="font-size:0.9rem; font-weight:normal;" class="text-muted">units</span>
+                                {% else %}
+                                    <span class="text-muted">--</span>
+                                {% endif %}
+                            </h2>
+                        </div>
+                        <div class="bg-success bg-opacity-10 p-3 rounded-4 border border-success border-opacity-10">
+                            <i class="bi bi-graph-up-arrow text-success fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Chart Section -->
+            <div class="row mb-5" id="analyticsSection">
+                <div class="col-12">
+                    <div class="glass-card">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h5 class="fw-bold mb-1 text-dark">Usage & Predictive Trends</h5>
+                                <p class="text-muted small mb-0">Visual analysis comparing historical inputs to the ML regression line.</p>
+                            </div>
+                            <span class="badge bg-secondary bg-opacity-10 border border-secondary border-opacity-25 px-3 py-2 text-dark">Polynomial Regression</span>
+                        </div>
+                        <div style="position: relative; height: 350px; width: 100%;">
+                            <canvas id="usageChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Two-Column Actions & Table Grid -->
+            <div class="row g-4">
+                <!-- Records Table Column -->
+                <div class="col-lg-8" id="recordsSection">
+                    <div class="glass-card h-100">
+                        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-4">
+                            <div>
+                                <h5 class="fw-bold text-dark mb-1">Utility Usage Log</h5>
+                                <p class="text-muted small mb-0">All historical records of month-by-month usage metrics.</p>
+                            </div>
+                            <div>
+                                <div class="position-relative">
+                                    <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                                    <input type="text" id="searchInput" class="search-input ps-5" placeholder="Search month..." onkeyup="filterTable()">
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if data %}
+                        <div class="table-responsive">
+                            <table class="table custom-table" id="recordsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Month</th>
+                                        <th>Usage (Units)</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in data %}
+                                    <tr>
+                                        <td>
+                                            <span class="fw-bold text-dark">{{ row.Month }}</span>
+                                            <span class="text-muted ms-2">({{ month_names[row.Month | int] }})</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark fw-semibold">{{ row.Usage }}</span>
+                                        </td>
+                                        <td class="text-end">
+                                            <button class="btn btn-sm btn-secondary-outline" onclick="openEditModal({{ row.Month }}, {{ row.Usage }})">
+                                                <i class="bi bi-pencil-square me-1"></i>Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox fs-1 text-muted d-block mb-3"></i>
+                            <h6 class="text-muted">No records available. Add some records to get started.</h6>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Prediction Card Column -->
+                <div class="col-lg-4">
+                    <div class="glass-card h-100">
+                        <h5 class="fw-bold mb-1 text-dark">Prediction Hub</h5>
+                        <p class="text-muted small mb-4">Forecast utility demand using the built-in Machine Learning model.</p>
+                        
+                        <!-- Predict Form -->
+                        <form action="/predict" method="POST" class="mb-4">
+                            <div class="mb-3">
+                                <label for="predictMonth" class="form-label text-muted small fw-bold">Target Month</label>
+                                <select name="month" id="predictMonth" class="form-select form-glass" required>
+                                    <option value="" disabled selected>Select a month...</option>
+                                    <option value="1">1 - January</option>
+                                    <option value="2">2 - February</option>
+                                    <option value="3">3 - March</option>
+                                    <option value="4">4 - April</option>
+                                    <option value="5">5 - May</option>
+                                    <option value="6">6 - June</option>
+                                    <option value="7">7 - July</option>
+                                    <option value="8">8 - August</option>
+                                    <option value="9">9 - September</option>
+                                    <option value="10">10 - October</option>
+                                    <option value="11">11 - November</option>
+                                    <option value="12">12 - December</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary-gradient w-100 mb-3">
+                                <i class="bi bi-graph-up-arrow me-2"></i>Generate Forecast
+                            </button>
+                        </form>
+
+                        <div class="text-center my-4">
+                            <span class="text-muted px-2 bg-light small text-uppercase fw-bold" style="letter-spacing:1px; font-size:0.75rem;">Model Management</span>
+                            <hr class="mt-2 mb-4" style="border-color: #cbd5e1">
+                        </div>
+
+                        <!-- Train Form -->
+                        <p class="text-muted small">Update the predictor coefficients to include recent additions and changes.</p>
+                        <form action="/train" method="POST">
+                            <button type="submit" class="btn btn-secondary-outline w-100">
+                                <i class="bi bi-arrow-repeat me-2"></i>Retrain ML Model
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Record Modal -->
+    <div class="modal fade" id="addRecordModal" tabindex="-1" aria-labelledby="addRecordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-glass">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold text-dark" id="addRecordModalLabel">
+                        <i class="bi bi-plus-circle text-primary me-2"></i>Add Usage Record
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/add" method="POST">
+                    <div class="modal-body py-4">
+                        <div class="mb-3">
+                            <label for="addMonth" class="form-label text-muted small fw-bold">Month</label>
+                            <select name="month" id="addMonth" class="form-select form-glass" required>
+                                <option value="" disabled selected>Select a month...</option>
+                                <option value="1">1 - January</option>
+                                <option value="2">2 - February</option>
+                                <option value="3">3 - March</option>
+                                <option value="4">4 - April</option>
+                                <option value="5">5 - May</option>
+                                <option value="6">6 - June</option>
+                                <option value="7">7 - July</option>
+                                <option value="8">8 - August</option>
+                                <option value="9">9 - September</option>
+                                <option value="10">10 - October</option>
+                                <option value="11">11 - November</option>
+                                <option value="12">12 - December</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="addUsage" class="form-label text-muted small fw-bold">Usage Value (Units)</label>
+                            <input type="number" step="0.01" min="0" name="usage" id="addUsage" class="form-control form-glass" placeholder="Enter usage value (e.g., 250.0)" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary-gradient">Add Record</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Record Modal -->
+    <div class="modal fade" id="editRecordModal" tabindex="-1" aria-labelledby="editRecordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-glass">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold text-dark" id="editRecordModalLabel">
+                        <i class="bi bi-pencil-square text-primary me-2"></i>Update Usage Record
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/update" method="POST">
+                    <div class="modal-body py-4">
+                        <div class="mb-3">
+                            <label for="editMonthSelect" class="form-label text-muted small fw-bold">Month</label>
+                            <!-- Hidden input to submit the actual month parameter to Flask -->
+                            <input type="hidden" name="month" id="editMonth">
+                            <!-- Disabled select to display the month to the user -->
+                            <select id="editMonthSelect" class="form-select form-glass" disabled>
+                                <option value="1">1 - January</option>
+                                <option value="2">2 - February</option>
+                                <option value="3">3 - March</option>
+                                <option value="4">4 - April</option>
+                                <option value="5">5 - May</option>
+                                <option value="6">6 - June</option>
+                                <option value="7">7 - July</option>
+                                <option value="8">8 - August</option>
+                                <option value="9">9 - September</option>
+                                <option value="10">10 - October</option>
+                                <option value="11">11 - November</option>
+                                <option value="12">12 - December</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUsage" class="form-label text-muted small fw-bold">New Usage Value (Units)</label>
+                            <input type="number" step="0.01" min="0" name="usage" id="editUsage" class="form-control form-glass" placeholder="Enter updated value" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary-gradient">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom Frontend Javascript -->
+    <script>
+        // Modal edit logic
+        function openEditModal(month, usage) {
+            document.getElementById('editMonth').value = month;
+            document.getElementById('editMonthSelect').value = month;
+            document.getElementById('editUsage').value = usage;
+            
+            const modal = new bootstrap.Modal(document.getElementById('editRecordModal'));
+            modal.show();
+        }
+
+        // Table client-side filter
+        function filterTable() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('recordsTable');
+            const tr = table.getElementsByTagName('tr');
+            
+            for (let i = 1; i < tr.length; i++) {
+                const td = tr[i].getElementsByTagName('td')[0];
+                if (td) {
+                    const txtValue = td.textContent || td.innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        // Auto-dismiss custom flash toasts after 5 seconds
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(() => {
+                document.querySelectorAll('.custom-toast').forEach(toast => {
+                    toast.style.transition = "opacity 0.5s ease";
+                    toast.style.opacity = 0;
+                    setTimeout(() => toast.remove(), 500);
+                });
+            }, 5000);
+
+            // Setup Interactive Chart
+            const rawData = {{ data | tojson }};
+            
+            // Sort rawData chronologically
+            rawData.sort((a, b) => a.Month - b.Month);
+            
+            const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            
+            // Group usage records by Month to calculate averages
+            const aggregated = {};
+            rawData.forEach(item => {
+                if (!aggregated[item.Month]) {
+                    aggregated[item.Month] = [];
+                }
+                aggregated[item.Month].push(item.Usage);
+            });
+
+            // Map data to full 12 months array for presentation
+            const fullUsageData = Array(12).fill(null);
+            for (let m = 1; m <= 12; m++) {
+                if (aggregated[m]) {
+                    const sum = aggregated[m].reduce((sum, val) => sum + val, 0);
+                    fullUsageData[m-1] = Math.round((sum / aggregated[m].length) * 100) / 100;
+                }
+            }
+
+            // Use Polynomial Regression predictions passed from the Flask backend
+            const trendData = {{ trend_data | tojson if trend_data is defined and trend_data else '[]' }};
+
+            const ctx = document.getElementById('usageChart').getContext('2d');
+            
+            // Background gradient fill for standard usage curve in light mode
+            const primaryGlow = ctx.createLinearGradient(0, 0, 0, 320);
+            primaryGlow.addColorStop(0, 'rgba(79, 70, 229, 0.15)');
+            primaryGlow.addColorStop(1, 'rgba(79, 70, 229, 0.00)');
+            
+            const allLabels = monthNames.slice(1);
+            
+            const datasets = [{
+                label: 'Average Historical Usage',
+                data: fullUsageData,
+                borderColor: '#4f46e5',
+                backgroundColor: primaryGlow,
+                borderWidth: 3,
+                fill: true,
+                tension: 0.35,
+                spanGaps: true,
+                pointBackgroundColor: '#4f46e5',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 8
+            }];
+            
+            // Add trendline overlay if sufficient records exist
+            if (trendData.length > 0) {
+                datasets.push({
+                    label: 'Regression Curve (Predictive)',
+                    data: trendData,
+                    borderColor: '#10b981',
+                    borderDash: [6, 4],
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 0,
+                    tension: 0.35
+                });
+            }
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: allLabels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#475569',
+                                font: {
+                                    family: 'Outfit',
+                                    size: 12,
+                                    weight: '500'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleFont: { family: 'Outfit', weight: 'bold', size: 13 },
+                            bodyFont: { family: 'Outfit', size: 12 },
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: true
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.04)'
+                            },
+                            ticks: {
+                                color: '#475569',
+                                font: { family: 'Outfit', size: 11 }
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.04)'
+                            },
+                            ticks: {
+                                color: '#475569',
+                                font: { family: 'Outfit', size: 11 }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

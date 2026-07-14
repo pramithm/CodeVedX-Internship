@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-FILE_PATH ="utils/usage_data.csv"
+FILE_PATH = "data/usage_data.csv"
 
 def load_data():
     if not os.path.exists(FILE_PATH):
