@@ -1,10 +1,10 @@
-import os
 import io
 import csv
-import joblib
 import numpy as np
 import pandas as pd
 from flask import Flask, request, jsonify, render_template
+
+from src.train_model import load_data, train_model
 
 # Initialize Flask Application with customized template and static folders
 app = Flask(
@@ -15,17 +15,28 @@ app = Flask(
 )
 
 # Constants
-MODEL_PATH = "models/model.pkl"
 DATASET_PATH = "data/student_performance_cleaned.csv"
 
-# Make sure models dir exists
-os.makedirs("models", exist_ok=True)
+# ---------------------------------------------------------------------------
+# In-memory model — trained once at startup, retrained via /api/train
+# ---------------------------------------------------------------------------
+_model = None
+_train_metrics = None
 
-# Helper function to load model
+def init_model():
+    """Train the model from the cleaned dataset and cache it in memory."""
+    global _model, _train_metrics
+    data = load_data(DATASET_PATH)
+    _model, _train_metrics = train_model(data)
+    print("Model ready (in-memory).")
+
 def get_model():
-    if os.path.exists(MODEL_PATH):
-        return joblib.load(MODEL_PATH)
-    return None
+    """Return the cached in-memory model."""
+    return _model
+
+# Train on startup
+init_model()
+
 
 # Helper to generate recommendations
 def generate_recommendations(prediction, attendance, study_hours, midterm_marks):
@@ -97,7 +108,7 @@ def predict():
     """Predict final marks for a single student."""
     model = get_model()
     if not model:
-        return jsonify({"error": "Machine learning model file not found. Please train the model first."}), 500
+        return jsonify({"error": "Model is not available. Please try again shortly."}), 500
 
     try:
         data = request.get_json()
@@ -144,7 +155,7 @@ def predict_batch():
     """Perform predictions on an uploaded CSV file."""
     model = get_model()
     if not model:
-        return jsonify({"error": "Model not found. Train the model first."}), 500
+        return jsonify({"error": "Model is not available. Please try again shortly."}), 500
 
     if "file" not in request.files:
         return jsonify({"error": "No file uploaded"}), 400
@@ -173,12 +184,12 @@ def predict_batch():
                 attendance = float(row["Attendance"])
                 study_hours = float(row["StudyHours"])
                 midterm_marks = float(row["MidtermMarks"])
-                
+
                 # Make prediction
                 features = np.array([[attendance, study_hours, midterm_marks]])
                 pred_score = float(model.predict(features)[0])
                 pred_score = float(np.clip(pred_score, 0.0, 100.0))
-                
+
                 # Success category mapping
                 if pred_score >= 90:
                     status = "Excellent"
@@ -225,12 +236,13 @@ def predict_batch():
 @app.route("/api/stats", methods=["GET"])
 def get_stats():
     """Retrieve training dataset rows, descriptive statistics, correlations, and model metrics."""
+    import os
     if not os.path.exists(DATASET_PATH):
         return jsonify({"error": "Cleaned dataset not found."}), 404
 
     model = get_model()
     if not model:
-        return jsonify({"error": "Model not found. Train the model first."}), 500
+        return jsonify({"error": "Model is not available. Please try again shortly."}), 500
 
     try:
         # Load dataset
@@ -238,7 +250,7 @@ def get_stats():
 
         # Calculate descriptive stats / averages
         averages = df.mean().to_dict()
-        
+
         # Calculate correlation matrix
         corr = df.corr().to_dict()
 
@@ -248,7 +260,7 @@ def get_stats():
         # Dynamic metrics verification (R2, MAE, MSE on active dataset)
         X = df[["Attendance", "StudyHours", "MidtermMarks"]]
         y = df["FinalMarks"]
-        
+
         predictions = model.predict(X)
         from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
         mae = float(mean_absolute_error(y, predictions))
@@ -283,20 +295,18 @@ def get_stats():
 
 @app.route("/api/train", methods=["POST"])
 def retrain_model():
-    """Trigger the training script to retrain the model and save to disk."""
+    """Retrain the model in-memory from the dataset (no file saved to disk)."""
+    import os
     try:
-        from src.train_model import load_data, train_model
-        
         if not os.path.exists(DATASET_PATH):
             return jsonify({"error": f"Data file {DATASET_PATH} not found to retrain model."}), 404
-            
-        data = load_data(DATASET_PATH)
-        metrics = train_model(data)
-        
+
+        init_model()  # Re-runs training and updates global _model and _train_metrics
+
         return jsonify({
             "success": True,
-            "message": "Model retrained and saved successfully on disk.",
-            "metrics": metrics
+            "message": "Model retrained successfully in-memory (no file saved).",
+            "metrics": _train_metrics
         })
     except Exception as e:
         return jsonify({"error": f"Failed to retrain model: {str(e)}"}), 500

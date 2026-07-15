@@ -1,5 +1,4 @@
 import pandas as pd
-import joblib
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
@@ -15,7 +14,8 @@ def load_data(file_path):
 
 def train_model(data):
     """
-    Train Linear Regression model.
+    Train Linear Regression model and return the trained model object along
+    with evaluation metrics. No file is saved to disk.
     """
 
     # Features
@@ -32,13 +32,11 @@ def train_model(data):
         random_state=42
     )
 
-    # Create model
+    # Create and train model
     model = LinearRegression()
-
-    # Train model
     model.fit(X_train, y_train)
 
-    # Predictions
+    # Predictions on test set
     predictions = model.predict(X_test)
 
     # Evaluation
@@ -51,24 +49,21 @@ def train_model(data):
     print(f"Mean Absolute Error : {mae:.2f}")
     print(f"Mean Squared Error  : {mse:.2f}")
     print(f"R² Score            : {r2:.2f}")
+    print("\nModel trained successfully (in-memory, no file saved).")
 
-    # Save model
-    joblib.dump(model, "models/model.pkl")
-
-    print("\nModel saved successfully!")
-    print("Location: models/model.pkl")
-    
-    return {
+    metrics = {
         "mae": float(mae),
         "mse": float(mse),
         "r2": float(r2)
     }
 
+    return model, metrics
 
 
 def main():
     data = load_data("data/student_performance_cleaned.csv")
-    train_model(data)
+    model, metrics = train_model(data)
+    print(f"\nMetrics: {metrics}")
 
 
 if __name__ == "__main__":
