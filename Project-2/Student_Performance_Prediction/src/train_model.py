@@ -57,6 +57,13 @@ def train_model(data):
 
     print("\nModel saved successfully!")
     print("Location: models/model.pkl")
+    
+    return {
+        "mae": float(mae),
+        "mse": float(mse),
+        "r2": float(r2)
+    }
+
 
 
 def main():

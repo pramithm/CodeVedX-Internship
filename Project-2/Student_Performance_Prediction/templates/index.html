@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPredict - Student Performance Prediction System</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>EduPredict</span>
+                </div>
+                <p class="subtitle">Predictive Analytics</p>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-item active" data-tab="dashboard">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" data-tab="single-predict">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <span>Predict Student</span>
+                </button>
+                <button class="nav-item" data-tab="model-details">
+                    <i class="fa-solid fa-database"></i>
+                    <span>Cleaned Dataset</span>
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="author-info">
+                    <p class="developed-by">DEVELOPED BY</p>
+                    <p class="author-name">Pramith M</p>
+                </div>
+                <p class="version">v1.2.0 • Premium Edition</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header bar -->
+            <header class="content-header">
+                <div class="header-title">
+                    <h1 id="page-title">Dashboard Overview</h1>
+                    <p id="page-subtitle" class="subtext">Insights and analysis of the active student performance dataset.</p>
+                </div>
+                <div class="header-actions">
+                    <span class="status-badge live">
+                        <span class="indicator-dot"></span>
+                        Model Loaded
+                    </span>
+                </div>
+            </header>
+
+            <!-- Dashboard View -->
+            <section id="dashboard" class="tab-content active">
+                <!-- Summary Metrics Cards -->
+                <div class="metrics-grid">
+                    <div class="card stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-label">R² Accuracy Score</span>
+                            <h3 id="stat-r2">--</h3>
+                            <span class="stat-trendup">Linear Regression Model</span>
+                        </div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-label">Avg Attendance</span>
+                            <h3 id="stat-attendance">--</h3>
+                            <span class="stat-trend">Target: > 75.0%</span>
+                        </div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-icon green">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-label">Avg Study Hours</span>
+                            <h3 id="stat-hours">--</h3>
+                            <span class="stat-trend">Hours per week</span>
+                        </div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-icon orange">
+                            <i class="fa-solid fa-file-invoice"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-label">Avg Midterm Marks</span>
+                            <h3 id="stat-midterm">--</h3>
+                            <span class="stat-trend">Out of 100 max</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts-grid">
+                    <div class="card chart-card large">
+                        <div class="card-header">
+                            <h4>Attendance vs. Final Marks</h4>
+                            <span class="card-desc">Exploratory scatter analysis showing student engagement impact</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="attendanceChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="card chart-card large">
+                        <div class="card-header">
+                            <h4>Study Hours vs. Final Marks</h4>
+                            <span class="card-desc">Analyzing the influence of self-study routines on final grades</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="studyHoursChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h4>Final Marks Distribution</h4>
+                            <span class="card-desc">Histogram showing student marks distribution</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="distributionChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h4>Correlation Matrix</h4>
+                            <span class="card-desc">Relationships between numerical variables</span>
+                        </div>
+                        <div class="correlation-heatmap-container">
+                            <div class="heatmap-grid" id="heatmapGrid">
+                                <!-- Generated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Single Prediction View -->
+            <section id="single-predict" class="tab-content">
+                <div class="split-layout">
+                    <!-- Left: Form inputs -->
+                    <div class="card form-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-sliders text-primary"></i> Predict Individual Performance</h3>
+                            <p class="card-desc">Enter the student's metrics below to generate a predicted final mark and recommendations.</p>
+                        </div>
+                        <form id="predictionForm" class="prediction-form">
+                            <div class="form-group">
+                                <label for="student_name">Student Name (Optional)</label>
+                                <div class="input-icon-wrapper">
+                                    <i class="fa-regular fa-user"></i>
+                                    <input type="text" id="student_name" placeholder="e.g. John Doe">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="label-with-val">
+                                    <label for="attendance">Attendance (%)</label>
+                                    <span class="value-bubble" id="attendanceVal">85%</span>
+                                </div>
+                                <div class="slider-wrapper">
+                                    <input type="range" id="attendance" min="0" max="100" value="85" step="1">
+                                </div>
+                                <span class="help-text">Percentage of lectures attended during the semester.</span>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="label-with-val">
+                                    <label for="study_hours">Study Hours / Week</label>
+                                    <span class="value-bubble" id="studyHoursVal">5.0 hrs</span>
+                                </div>
+                                <div class="slider-wrapper">
+                                    <input type="range" id="study_hours" min="0" max="20" value="5" step="0.5">
+                                </div>
+                                <span class="help-text">Weekly self-study hours dedicated outside classes.</span>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="label-with-val">
+                                    <label for="midterm_marks">Midterm Marks</label>
+                                    <span class="value-bubble" id="midtermVal">75 / 100</span>
+                                </div>
+                                <div class="slider-wrapper">
+                                    <input type="range" id="midterm_marks" min="0" max="100" value="75" step="1">
+                                </div>
+                                <span class="help-text">Midterm assessment score out of 100.</span>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fa-solid fa-calculator"></i> Generate Prediction
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Right: Results Panel -->
+                    <div class="card result-card placeholder-state" id="resultPanel">
+                        <div class="result-placeholder" id="resultPlaceholder">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            <h4>Awaiting Prediction Inputs</h4>
+                            <p>Adjust the sliders on the left and click "Generate Prediction" to see predicted marks, academic status, and guidance.</p>
+                        </div>
+                        
+                        <div class="result-content hidden" id="resultContent">
+                            <div class="result-header">
+                                <span class="badge" id="riskBadge">Excellent</span>
+                                <h4 class="student-result-name" id="studentDisplayName">Student Performance Analysis</h4>
+                            </div>
+                            
+                            <!-- Gauge Visual -->
+                            <div class="score-display">
+                                <div class="gauge-ring">
+                                    <div class="gauge-value">
+                                        <span class="number" id="predictedScore">--</span>
+                                        <span class="total">/ 100</span>
+                                    </div>
+                                    <svg class="gauge-svg">
+                                        <circle cx="90" cy="90" r="75" class="gauge-bg"></circle>
+                                        <circle cx="90" cy="90" r="75" class="gauge-fill" id="gaugeProgress"></circle>
+                                    </svg>
+                                </div>
+                                <div class="score-label">Predicted Final Marks</div>
+                            </div>
+                            
+                            <!-- Performance Advice Cards -->
+                            <div class="advice-section">
+                                <h5><i class="fa-solid fa-lightbulb text-warning"></i> Actionable Guidance</h5>
+                                <div class="advice-list">
+                                    <div class="advice-item" id="attendanceAdvice">
+                                        <div class="advice-icon"><i class="fa-solid fa-calendar-check"></i></div>
+                                        <div class="advice-text">--</div>
+                                    </div>
+                                    <div class="advice-item" id="studyAdvice">
+                                        <div class="advice-icon"><i class="fa-solid fa-clock"></i></div>
+                                        <div class="advice-text">--</div>
+                                    </div>
+                                    <div class="advice-item" id="midtermAdvice">
+                                        <div class="advice-icon"><i class="fa-solid fa-file-invoice"></i></div>
+                                        <div class="advice-text">--</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="advice-alert" id="overallSummary">
+                                --
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dataset View -->
+            <section id="model-details" class="tab-content">
+                <div class="card dataset-card" style="width: 100%;">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-database text-info"></i> Cleaned Training Dataset</h3>
+                        <p class="card-desc">Showing records loaded from <code>data/student_performance_cleaned.csv</code></p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="datasetTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Attendance (%)</th>
+                                    <th>Study Hours</th>
+                                    <th>Midterm Marks</th>
+                                    <th>Final Marks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Toast Notification for success/errors -->
+    <div class="toast-notification" id="toast">
+        <i class="fa-solid fa-circle-info toast-icon"></i>
+        <span class="toast-message" id="toastMessage">Success notification!</span>
+    </div>
+
+    <!-- Custom Script JS -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
