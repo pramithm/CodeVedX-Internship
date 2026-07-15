@@ -224,7 +224,27 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('stat-hours').textContent = statsData.averages.StudyHours.toFixed(1) + ' hrs';
             document.getElementById('stat-midterm').textContent = statsData.averages.MidtermMarks.toFixed(1) + '/100';
 
-
+            // Populate Model Specifications
+            if (statsData.model_info) {
+                const coeff = statsData.model_info.coefficients;
+                const intercept = statsData.model_info.intercept;
+                
+                document.getElementById('coeff-attendance').textContent = coeff.Attendance.toFixed(4);
+                document.getElementById('coeff-study').textContent = coeff.StudyHours.toFixed(4);
+                document.getElementById('coeff-midterm').textContent = coeff.MidtermMarks.toFixed(4);
+                document.getElementById('intercept-val').textContent = intercept.toFixed(4);
+                
+                // Formulate the equation
+                const eqSign = intercept >= 0 ? '+ ' : '- ';
+                const eqText = `FinalMarks = (${coeff.Attendance.toFixed(4)} * Attendance) + (${coeff.StudyHours.toFixed(4)} * StudyHours) + (${coeff.MidtermMarks.toFixed(4)} * MidtermMarks) ${eqSign}${Math.abs(intercept).toFixed(4)}`;
+                document.getElementById('model-equation').textContent = eqText;
+            }
+            
+            if (statsData.metrics) {
+                document.getElementById('model-r2').textContent = statsData.metrics.r2.toFixed(4);
+                document.getElementById('model-mae').textContent = statsData.metrics.mae.toFixed(4);
+                document.getElementById('model-mse').textContent = statsData.metrics.mse.toFixed(4);
+            }
 
             // Populate Cleaned Dataset Table
             renderDatasetTable(statsData.dataset);
@@ -444,7 +464,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ==========================================================================
-    // Initializer
+    // Initializer & Button Listeners
     // ==========================================================================
+    const btnRetrain = document.getElementById('btn-retrain');
+    if (btnRetrain) {
+        btnRetrain.addEventListener('click', async () => {
+            const originalHTML = btnRetrain.innerHTML;
+            try {
+                btnRetrain.disabled = true;
+                btnRetrain.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Retraining...';
+                
+                const response = await fetch('/api/train', {
+                    method: 'POST'
+                });
+                
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(errData.error || 'Failed to retrain model');
+                }
+                
+                await response.json();
+                showToast('Model retrained successfully!', 'success');
+                await loadDashboardStats();
+            } catch (error) {
+                console.error('Retrain Error:', error);
+                showToast(error.message, 'error');
+            } finally {
+                btnRetrain.disabled = false;
+                btnRetrain.innerHTML = originalHTML;
+            }
+        });
+    }
+
     loadDashboardStats();
 });

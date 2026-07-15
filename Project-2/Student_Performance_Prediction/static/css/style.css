@@ -1073,8 +1073,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .retrain-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
+    gap: 1.5rem;
     border-top: 1px solid var(--border-color);
     padding-top: 1.25rem;
     margin-top: 1.5rem;

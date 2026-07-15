@@ -275,26 +275,93 @@
 
             <!-- Dataset View -->
             <section id="model-details" class="tab-content">
-                <div class="card dataset-card" style="width: 100%;">
-                    <div class="card-header">
-                        <h3><i class="fa-solid fa-database text-info"></i> Cleaned Training Dataset</h3>
-                        <p class="card-desc">Showing records loaded from <code>data/student_performance_cleaned.csv</code></p>
+                <div class="split-layout">
+                    <!-- Left: Table card -->
+                    <div class="card dataset-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-database text-info"></i> Cleaned Training Dataset</h3>
+                            <p class="card-desc">Showing records loaded from <code>data/student_performance_cleaned.csv</code></p>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table" id="datasetTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Attendance (%)</th>
+                                        <th>Study Hours</th>
+                                        <th>Midterm Marks</th>
+                                        <th>Final Marks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="table-responsive">
-                        <table class="data-table" id="datasetTable">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Attendance (%)</th>
-                                    <th>Study Hours</th>
-                                    <th>Midterm Marks</th>
-                                    <th>Final Marks</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Dynamic rows -->
-                            </tbody>
-                        </table>
+
+                    <!-- Right: Model details and Retrain option -->
+                    <div class="card model-specs-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-gears text-primary"></i> Model Specifications</h3>
+                            <p class="card-desc">Mathematical representations and metrics of the trained regression model.</p>
+                        </div>
+
+                        <!-- Model Formula Card -->
+                        <div class="model-formula-card">
+                            <h5>Linear Regression Equation</h5>
+                            <div class="equation-box">
+                                <code id="model-equation">FinalMarks = (a1 * Attendance) + (a2 * StudyHours) + (a3 * MidtermMarks) + c</code>
+                            </div>
+                            
+                            <h5>Coefficients & Intercept</h5>
+                            <div class="coefficients-list">
+                                <div class="coeff-item">
+                                    <span>Attendance Coefficient (a1)</span>
+                                    <span id="coeff-attendance">--</span>
+                                </div>
+                                <div class="coeff-item">
+                                    <span>Study Hours Coefficient (a2)</span>
+                                    <span id="coeff-study">--</span>
+                                </div>
+                                <div class="coeff-item">
+                                    <span>Midterm Marks Coefficient (a3)</span>
+                                    <span id="coeff-midterm">--</span>
+                                </div>
+                                <div class="coeff-item">
+                                    <span>Intercept (c)</span>
+                                    <span id="intercept-val">--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Metrics Grid -->
+                        <h5>Performance Metrics</h5>
+                        <div class="metrics-mini-grid">
+                            <div class="metric-box">
+                                <span class="label">R² Score</span>
+                                <span class="val" id="model-r2">--</span>
+                            </div>
+                            <div class="metric-box">
+                                <span class="label">MAE</span>
+                                <span class="val" id="model-mae">--</span>
+                            </div>
+                            <div class="metric-box">
+                                <span class="label">MSE</span>
+                                <span class="val" id="model-mse">--</span>
+                            </div>
+                        </div>
+
+                        <!-- Retrain Container -->
+                        <div class="retrain-container">
+                            <div class="retrain-info">
+                                <h5>Retrain ML Model</h5>
+                                <p class="help-text">Re-fit linear regression with current data on disk.</p>
+                            </div>
+                            <button id="btn-retrain" class="btn btn-primary">
+                                <i class="fa-solid fa-rotate"></i> Retrain
+                            </button>
+                        </div>
                     </div>
                 </div>
             </section>
