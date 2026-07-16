@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="TruthLens AI — Instantly detect fake news using machine learning. Get real-time classification with confidence scores powered by Logistic Regression & TF-IDF." />
+  <meta name="keywords" content="fake news detection, AI, machine learning, news verification, fact check" />
+  <meta property="og:title" content="TruthLens AI — Fake News Detector" />
+  <meta property="og:description" content="Detect fake news instantly with AI-powered analysis and confidence scoring." />
+  <title>TruthLens AI — Fake News Detector</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+
+  <!-- Background Texture -->
+  <div class="bg-texture" aria-hidden="true">
+    <div class="bg-noise"></div>
+    <div class="bg-blob bg-blob-1"></div>
+    <div class="bg-blob bg-blob-2"></div>
+    <div class="bg-blob bg-blob-3"></div>
+  </div>
+
+  <div class="app-wrapper">
+
+    <!-- Navbar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <div class="container">
+        <a href="/" class="navbar-brand" id="navbar-brand">
+          <div class="navbar-logo" aria-hidden="true">🔍</div>
+          <span class="navbar-title">Truth<span>Lens</span></span>
+        </a>
+        <span class="navbar-badge">AI Powered</span>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+
+      <!-- Hero -->
+      <section class="hero" aria-labelledby="hero-heading">
+        <div class="container">
+          <div class="hero-badge">
+            <span class="dot" aria-hidden="true"></span>
+            Model Active · Logistic Regression + TF-IDF
+          </div>
+          <h1 class="hero-title" id="hero-heading">
+            Detect Fake News<br />
+            <span class="gradient-text">Instantly with AI</span>
+          </h1>
+          <p class="hero-subtitle">
+            Paste any news article or headline and our machine learning model will classify it as <strong>real</strong> or <strong>fake</strong> with a confidence score in milliseconds.
+          </p>
+
+          <!-- Stats Bar -->
+          <div class="stats-bar" role="list" aria-label="Model statistics">
+            <div class="stat-item" role="listitem">
+              <div class="stat-value">~98%</div>
+              <div class="stat-label">Train Accuracy</div>
+            </div>
+            <div class="stats-divider" aria-hidden="true"></div>
+            <div class="stat-item" role="listitem">
+              <div class="stat-value">~92%</div>
+              <div class="stat-label">Test Accuracy</div>
+            </div>
+            <div class="stats-divider" aria-hidden="true"></div>
+            <div class="stat-item" role="listitem">
+              <div class="stat-value">LR</div>
+              <div class="stat-label">Algorithm</div>
+            </div>
+            <div class="stats-divider" aria-hidden="true"></div>
+            <div class="stat-item" role="listitem">
+              <div class="stat-value">TF-IDF</div>
+              <div class="stat-label">Vectorizer</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analyzer Card -->
+      <section aria-label="News analyzer" class="container">
+        <div class="main-card" id="analyzer-card">
+
+          <!-- Error Alert -->
+          {% if error %}
+          <div class="error-alert" role="alert" id="error-alert" aria-live="polite">
+            <span aria-hidden="true">⚠️</span>
+            {{ error }}
+          </div>
+          {% endif %}
+
+          <!-- Form -->
+          <form id="news-form" method="POST" action="/predict" novalidate>
+
+            <div class="form-group">
+              <label class="form-label" for="news-input">
+                <span class="icon" aria-hidden="true">📰</span>
+                News Article or Headline
+              </label>
+
+              <div class="textarea-wrapper">
+                <textarea
+                  id="news-input"
+                  name="news"
+                  class="news-textarea"
+                  placeholder="Paste your news article or headline here… e.g. 'Scientists discover new planet with signs of water'"
+                  aria-label="News article text input"
+                  aria-required="true"
+                  aria-describedby="char-count"
+                  spellcheck="true"
+                >{{ news if news else '' }}</textarea>
+                <span class="char-counter" id="char-count" aria-live="polite">0 chars</span>
+              </div>
+            </div>
+
+            <!-- Quick Examples -->
+            <div class="examples-section">
+              <div class="examples-label">Quick examples — click to try:</div>
+              <div class="examples-pills" role="list" aria-label="Example news articles">
+                <button
+                  type="button"
+                  class="example-pill"
+                  role="listitem"
+                  aria-label="Load fake news example"
+                  data-text="BREAKING: Government secretly puts mind-control chemicals in tap water to suppress population uprising, whistleblower reveals shocking truth!"
+                >
+                  <span class="pill-tag fake">Fake</span> Mind-control chemicals
+                </button>
+                <button
+                  type="button"
+                  class="example-pill"
+                  role="listitem"
+                  aria-label="Load real news example"
+                  data-text="NASA's James Webb Space Telescope captures the deepest infrared image of the universe ever taken, revealing thousands of previously unseen galaxies."
+                >
+                  <span class="pill-tag real">Real</span> Webb telescope images
+                </button>
+                <button
+                  type="button"
+                  class="example-pill"
+                  role="listitem"
+                  aria-label="Load fake news example 2"
+                  data-text="Scientists confirm that the moon is actually a giant hologram projected by alien civilizations to keep humans from discovering the truth about flat earth."
+                >
+                  <span class="pill-tag fake">Fake</span> Moon hologram theory
+                </button>
+                <button
+                  type="button"
+                  class="example-pill"
+                  role="listitem"
+                  aria-label="Load real news example 2"
+                  data-text="The Federal Reserve raised interest rates by 25 basis points on Wednesday, marking the tenth consecutive rate hike as it continues to combat persistent inflation."
+                >
+                  <span class="pill-tag real">Real</span> Fed rate hike
+                </button>
+              </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="form-footer">
+              <button
+                type="submit"
+                class="btn-analyze"
+                id="btn-analyze"
+                aria-label="Analyze news article"
+              >
+                <span class="btn-text">
+                  <span aria-hidden="true">🧠</span>
+                  Analyze Article
+                </span>
+                <span class="btn-loader" aria-label="Analyzing...">
+                  <span class="spinner" aria-hidden="true"></span>
+                  Analyzing…
+                </span>
+              </button>
+              <button
+                type="button"
+                class="btn-clear"
+                id="btn-clear"
+                aria-label="Clear input"
+              >
+                ✕ Clear
+              </button>
+            </div>
+          </form>
+
+          <!-- ===== RESULT ===== -->
+          {% if prediction %}
+          <div class="result-section" id="result-section" aria-live="polite" aria-label="Analysis result">
+
+            <div class="result-divider" aria-hidden="true">
+              <span class="result-divider-text">Analysis Result</span>
+            </div>
+
+            <div class="result-card {{ prediction | lower }}" id="result-card" role="region" aria-label="Classification result: {{ prediction }}">
+              <div class="result-card-bg" aria-hidden="true"></div>
+
+              <!-- Verdict Header -->
+              <div class="result-header">
+                <div class="result-verdict">
+                  <div class="verdict-icon" aria-hidden="true">
+                    {% if prediction == "FAKE" %}❌{% else %}✅{% endif %}
+                  </div>
+                  <div>
+                    <div class="verdict-label">Classification</div>
+                    <div class="verdict-text" id="verdict-text">{{ prediction }}</div>
+                  </div>
+                </div>
+                <div class="verdict-badge">
+                  {% if prediction == "FAKE" %}
+                  ⚠️ Misinformation Risk
+                  {% else %}
+                  ✔ Verified News
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Metrics Grid -->
+              <div class="metrics-grid" role="list" aria-label="Analysis metrics">
+                <div class="metric-card" role="listitem">
+                  <div class="metric-label">Confidence Score</div>
+                  <div class="metric-value" id="metric-confidence">{{ confidence }}%</div>
+                  <div class="metric-sub">Model certainty</div>
+                </div>
+                <div class="metric-card" role="listitem">
+                  <div class="metric-label">Verdict</div>
+                  <div class="metric-value">{{ prediction }}</div>
+                  <div class="metric-sub">
+                    {% if prediction == "FAKE" %}Likely misinformation{% else %}Likely authentic{% endif %}
+                  </div>
+                </div>
+                <div class="metric-card" role="listitem">
+                  <div class="metric-label">Risk Level</div>
+                  <div class="metric-value">
+                    {% if confidence >= 90 %}
+                      {% if prediction == "FAKE" %}HIGH{% else %}LOW{% endif %}
+                    {% elif confidence >= 70 %}
+                      MED
+                    {% else %}
+                      LOW
+                    {% endif %}
+                  </div>
+                  <div class="metric-sub">
+                    {% if confidence >= 90 %}
+                      {% if prediction == "FAKE" %}High misinformation risk{% else %}Highly credible{% endif %}
+                    {% elif confidence >= 70 %}
+                      Moderate certainty
+                    {% else %}
+                      Borderline result
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Confidence Bar -->
+              <div class="confidence-section">
+                <div class="confidence-header">
+                  <span class="confidence-label">Confidence Meter</span>
+                  <span class="confidence-pct" id="confidence-pct">{{ confidence }}%</span>
+                </div>
+                <div class="confidence-track" role="progressbar" aria-valuenow="{{ confidence }}" aria-valuemin="0" aria-valuemax="100" aria-label="Confidence {{ confidence }}%">
+                  <div class="confidence-fill" id="confidence-fill" data-width="{{ confidence }}"></div>
+                </div>
+              </div>
+
+              <!-- Risk Meter (visual segments) -->
+              <div class="risk-meter" aria-label="Risk level indicator">
+                <div class="risk-label">Risk Spectrum</div>
+                <div class="risk-segments" id="risk-segments">
+                  <!-- Filled by JS -->
+                </div>
+                <div class="risk-ticks" aria-hidden="true">
+                  <span class="risk-tick">0%</span>
+                  <span class="risk-tick">25%</span>
+                  <span class="risk-tick">50%</span>
+                  <span class="risk-tick">75%</span>
+                  <span class="risk-tick">100%</span>
+                </div>
+              </div>
+
+              <!-- Input Preview -->
+              <div class="input-preview">
+                <div class="input-preview-label">Analyzed Text</div>
+                <p class="input-preview-text" id="input-preview-text">{{ news }}</p>
+              </div>
+
+            </div><!-- /.result-card -->
+          </div><!-- /.result-section -->
+          {% endif %}
+
+        </div><!-- /.main-card -->
+      </section>
+
+      <!-- Feature Cards -->
+      <section class="container" aria-label="Features">
+        <div class="features-section" role="list">
+          <article class="feature-card" role="listitem">
+            <span class="feature-icon" aria-hidden="true">⚡</span>
+            <h2 class="feature-title">Instant Analysis</h2>
+            <p class="feature-desc">Real-time classification in milliseconds using a pre-trained Logistic Regression pipeline — no waiting, no external APIs.</p>
+          </article>
+          <article class="feature-card" role="listitem">
+            <span class="feature-icon" aria-hidden="true">📊</span>
+            <h2 class="feature-title">Confidence Scoring</h2>
+            <p class="feature-desc">See exactly how certain the model is with a percentage confidence score, risk level label, and a visual confidence meter.</p>
+          </article>
+          <article class="feature-card" role="listitem">
+            <span class="feature-icon" aria-hidden="true">🧪</span>
+            <h2 class="feature-title">NLP Preprocessing</h2>
+            <p class="feature-desc">Text is stemmed, stopwords are removed, and TF-IDF vectorization extracts meaningful features before classification.</p>
+          </article>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+      <div class="container">
+        <p class="footer-text">
+          Built with Flask · Scikit-learn · TF-IDF · Logistic Regression ·
+          <a href="https://github.com/" target="_blank" rel="noopener noreferrer">View Source</a>
+        </p>
+      </div>
+    </footer>
+
+  </div><!-- /.app-wrapper -->
+
+  <script>
+    /* ===========================
+       TruthLens AI — Frontend JS
+       =========================== */
+
+    // ---- Character Counter ----
+    const textarea = document.getElementById('news-input');
+    const charCount = document.getElementById('char-count');
+
+    function updateCharCount() {
+      const len = textarea.value.length;
+      charCount.textContent = len.toLocaleString() + ' chars';
+      charCount.classList.toggle('active', len > 0);
+    }
+
+    if (textarea) {
+      textarea.addEventListener('input', updateCharCount);
+      updateCharCount(); // init on load (handles pre-filled text)
+    }
+
+    // ---- Example Pills ----
+    document.querySelectorAll('.example-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        textarea.value = pill.dataset.text;
+        textarea.focus();
+        updateCharCount();
+        textarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+
+    // ---- Clear Button ----
+    const btnClear = document.getElementById('btn-clear');
+    if (btnClear) {
+      btnClear.addEventListener('click', () => {
+        textarea.value = '';
+        updateCharCount();
+        textarea.focus();
+      });
+    }
+
+    // ---- Loading State on Submit ----
+    const form = document.getElementById('news-form');
+    const btnAnalyze = document.getElementById('btn-analyze');
+
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        if (!textarea.value.trim()) {
+          e.preventDefault();
+          textarea.focus();
+          textarea.style.borderColor = 'var(--fake-color)';
+          textarea.style.boxShadow = '0 0 0 3px rgba(255, 75, 110, 0.15)';
+          setTimeout(() => {
+            textarea.style.borderColor = '';
+            textarea.style.boxShadow = '';
+          }, 1800);
+          return;
+        }
+        btnAnalyze.classList.add('loading');
+        btnAnalyze.disabled = true;
+      });
+    }
+
+    // ---- Confidence Bar Animation ----
+    const fill = document.getElementById('confidence-fill');
+    if (fill) {
+      const targetWidth = parseFloat(fill.dataset.width) || 0;
+      // Animate on next frame so transition fires
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          fill.style.width = targetWidth + '%';
+        }, 200);
+      });
+    }
+
+    // ---- Risk Segment Meter ----
+    const riskSegments = document.getElementById('risk-segments');
+    const resultCard = document.getElementById('result-card');
+
+    if (riskSegments && resultCard) {
+      const isFake = resultCard.classList.contains('fake');
+      const confidence = parseFloat(document.getElementById('confidence-pct')?.textContent) || 0;
+      const totalSegs = 20;
+      const filledSegs = Math.round((confidence / 100) * totalSegs);
+
+      for (let i = 0; i < totalSegs; i++) {
+        const seg = document.createElement('div');
+        seg.className = 'risk-seg';
+
+        if (i < filledSegs) {
+          // Color gradient: green → yellow → red for fake; green for real
+          if (isFake) {
+            const ratio = i / totalSegs;
+            if (ratio < 0.4) {
+              seg.style.background = `hsl(${140 - ratio * 200}, 80%, 55%)`;
+            } else if (ratio < 0.7) {
+              seg.style.background = `hsl(${50 - (ratio - 0.4) * 100}, 85%, 55%)`;
+            } else {
+              seg.style.background = `hsl(${10}, 85%, 60%)`;
+            }
+          } else {
+            seg.style.background = `hsl(${152 - i * 0.5}, 80%, 50%)`;
+          }
+          seg.style.opacity = '1';
+          if (i === filledSegs - 1) seg.classList.add('active');
+        } else {
+          seg.style.background = 'rgba(255,255,255,0.06)';
+          seg.style.opacity = '0.4';
+        }
+
+        riskSegments.appendChild(seg);
+      }
+    }
+
+    // ---- Scroll to result on page load if result exists ----
+    const resultSection = document.getElementById('result-section');
+    if (resultSection) {
+      setTimeout(() => {
+        resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 500);
+    }
+
+    // ---- Animate result card entrance ----
+    if (resultCard) {
+      resultCard.style.opacity = '0';
+      resultCard.style.transform = 'translateY(24px) scale(0.98)';
+      setTimeout(() => {
+        resultCard.style.transition = 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        resultCard.style.opacity = '1';
+        resultCard.style.transform = 'translateY(0) scale(1)';
+      }, 100);
+    }
+
+  </script>
+
+</body>
+</html>
