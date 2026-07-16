@@ -2,14 +2,19 @@
 # Importing Dependences
 """
 
+import os
 import re  # re-Regular Expression, Helps in searching words in a text or paragraph,to search, extract, modify, and validate text data
 
 import nltk
 from nltk.corpus import stopwords  # Natural Language Toolkit help to remove unwanted words like (a,an,is,the,and,this,that,those)
 from nltk.stem.porter import PorterStemmer  # It gives the root word such as for words like Loving, Lover, Loved, Lovable the root word is Love it will convert into root word
 
-# Download stopwords (runs only if not already available)
-nltk.download('stopwords', quiet=True)
+# Point NLTK at the bundled nltk_data/ directory in the project root.
+# This allows the app to run on read-only filesystems (e.g. Vercel) without
+# calling nltk.download() at runtime.
+_BUNDLE = os.path.join(os.path.dirname(__file__), "..", "nltk_data")
+if os.path.isdir(_BUNDLE):
+    nltk.data.path.insert(0, os.path.abspath(_BUNDLE))
 
 # So this are the stops words which are not useful in our dataset we will try to remove these words.
 STOP_WORDS = set(stopwords.words('english'))
