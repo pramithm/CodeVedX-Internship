@@ -2,6 +2,8 @@
 # Importing Dependences
 """
 
+import os
+
 from flask import Flask, render_template, request
 
 from src.predict import predict_news
@@ -44,4 +46,6 @@ def predict():
 
 # Running Flask Application
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Read debug flag from environment variable (default: False for production safety)
+    debug_mode = os.getenv("FLASK_DEBUG", "false").lower() == "true"
+    app.run(debug=debug_mode)

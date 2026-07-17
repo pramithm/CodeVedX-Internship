@@ -2,6 +2,7 @@
 # Importing Dependences
 """
 
+import os
 import pandas as pd
 import pickle
 
@@ -13,10 +14,15 @@ from sklearn.pipeline import Pipeline
 
 from src.preprocessing import stemming
 
+# Resolve paths relative to this file so the script works from any directory
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_DATA_PATH  = os.path.join(_ROOT, "data", "news.csv")
+_MODEL_PATH = os.path.join(_ROOT, "model", "fake_news_pipeline.pkl")
+
 """Data Pre-processing"""
 
 # loading the dataset into pandas DataFrame, we will see in good tablular format
-new_dataset = pd.read_csv("data/news.csv")
+new_dataset = pd.read_csv(_DATA_PATH)
 
 print("Dataset Shape:", new_dataset.shape)
 
@@ -24,7 +30,7 @@ print("Dataset Shape:", new_dataset.shape)
 print(new_dataset.isnull().sum())
 
 # For Lable fixing use central tendency for categoral data use mode
-new_dataset['label'].fillna(new_dataset['label'].mode()[0], inplace=True)
+new_dataset['label'] = new_dataset['label'].fillna(new_dataset['label'].mode()[0])
 
 # Removing the row in text because 'text'(missing value) is a unique field is replace with mode it leads to incorrect data, and removing Unnamed columns not useful
 new_dataset.drop(columns=['Unnamed: 0'], inplace=True)
@@ -84,7 +90,7 @@ print("Accuracy on testing data:", testing_data_accuracy)
 
 """Saving the trained pipeline"""
 
-with open("model/fake_news_pipeline.pkl", "wb") as file:
+with open(_MODEL_PATH, "wb") as file:
     pickle.dump(pipeline, file)
 
 print("Model saved successfully inside model/fake_news_pipeline.pkl")

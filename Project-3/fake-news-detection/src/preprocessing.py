@@ -40,9 +40,9 @@ def stemming(content):
         if word not in STOP_WORDS
     ]
 
-    stremmed_content = ' '.join(stemming_content)
+    stemmed_content = ' '.join(stemming_content)
 
-    return stremmed_content
+    return stemmed_content
 
 from sklearn.base import BaseEstimator, TransformerMixin
 import pandas as pd

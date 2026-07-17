@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, render_template
 
 from src.train_model import load_data, train_model
 
-# Initialize Flask Application with customized template and static folders
+
 app = Flask(
     __name__,
     template_folder="templates",
@@ -17,9 +17,7 @@ app = Flask(
 # Constants
 DATASET_PATH = "data/student_performance_cleaned.csv"
 
-# ---------------------------------------------------------------------------
-# In-memory model — trained once at startup, retrained via /api/train
-# ---------------------------------------------------------------------------
+
 _model = None
 _train_metrics = None
 
@@ -95,7 +93,7 @@ def generate_recommendations(prediction, attendance, study_hours, midterm_marks)
     }
 
 
-# ---------------- API ROUTES ---------------- #
+# -- API ROUTES -- #
 
 @app.route("/")
 def index():
