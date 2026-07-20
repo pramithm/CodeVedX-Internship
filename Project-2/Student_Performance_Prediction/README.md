@@ -16,6 +16,9 @@ A Machine Learning project that predicts a student's **final marks** based on th
 
 ---
 
+## 🔗 Demo Link:- (https://student-performanc.vercel.app/)
+
+---
 ## 🛠️ Technologies Used
 
 * Python
