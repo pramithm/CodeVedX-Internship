@@ -26,7 +26,7 @@
 
 ---
 
-##  🔗[Demo Link:] Click Here (https://fake-news-predict.vercel.app/)
+##  🔗 Demo Link: (https://fake-news-predict.vercel.app/)
 
 ---
 
