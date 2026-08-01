@@ -26,6 +26,12 @@
 
 ---
 
+##  🔗 Demo Link: (https://fake-news-predict.vercel.app/)
+
+---
+
+---
+
 ## 🧠 Overview
 
 **TruthLens AI** is a machine learning web application built with Flask that detects misinformation in news articles. It uses a trained **Logistic Regression** model with **TF-IDF vectorization** and **NLP preprocessing** (stemming + stopword removal) to classify text as real or fake, along with a **confidence percentage** indicating how certain the model is.

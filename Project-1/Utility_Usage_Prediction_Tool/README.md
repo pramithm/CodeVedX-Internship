@@ -16,6 +16,9 @@
 
 ---
 
+## ✨ Demo Link:- (https://utility-usage-prediction-tool.vercel.app/)
+
+---
 ## 🛠️ Tech Stack
 
 * 🐍 Python 3
