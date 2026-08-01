@@ -23,7 +23,7 @@ def fetch_poster(movie_id):
                 return "https://image.tmdb.org/t/p/w500/" + data["poster_path"]
     except Exception:
         pass
-    return "https://via.placeholder.com/500x750?text=No+Image"
+    return "https://placehold.co/500x750/28282B/FFF?text=No+Poster"
 
 
 # ---------------- Recommend Function ----------------
