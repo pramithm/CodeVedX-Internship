@@ -1,4 +1,4 @@
-# Import Required Libraries
+import os
 import json
 import pickle
 
@@ -6,9 +6,13 @@ from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATASET_PATH = os.path.join(BASE_DIR, "dataset", "intents.json")
+MODEL_PATH = os.path.join(BASE_DIR, "model", "chatbot_pipeline.pkl")
+
 
 # Load the intents dataset
-with open("dataset/intents.json", "r") as file:
+with open(DATASET_PATH, "r", encoding="utf-8") as file:
     data = json.load(file)
 
 
@@ -38,8 +42,8 @@ pipeline.fit(patterns, tags)
 
 
 # Save the trained pipeline
-with open("model/chatbot_pipeline.pkl", "wb") as file:
+with open(MODEL_PATH, "wb") as file:
     pickle.dump(pipeline, file)
 
 
-print("✅ Chatbot model trained successfully!")
+print("Chatbot model trained successfully!")

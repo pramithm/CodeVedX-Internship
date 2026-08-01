@@ -1,16 +1,19 @@
-# Import Required Libraries
+import os
 import json
 import pickle
 import random
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "model", "chatbot_pipeline.pkl")
+DATASET_PATH = os.path.join(BASE_DIR, "dataset", "intents.json")
 
 # Load the trained pipeline
-with open("model/chatbot_pipeline.pkl", "rb") as file:
+with open(MODEL_PATH, "rb") as file:
     pipeline = pickle.load(file)
 
 
 # Load intents dataset
-with open("dataset/intents.json", "r") as file:
+with open(DATASET_PATH, "r", encoding="utf-8") as file:
     data = json.load(file)
 
 
