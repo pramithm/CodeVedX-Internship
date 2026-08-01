@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI HR Helpdesk | Intelligent Virtual Assistant</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- App Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="app-layout">
+        <!-- Main Chat Wrapper -->
+        <main class="chat-container">
+            
+            <!-- Chat Header -->
+            <header class="chat-header">
+                <div class="header-info">
+                    <div class="bot-avatar-container">
+                        <div class="bot-avatar-icon">
+                            <i class="fa-solid fa-user-gear"></i>
+                        </div>
+                        <span class="status-indicator" title="AI Assistant Online"></span>
+                    </div>
+                    <div class="header-details">
+                        <h1 class="app-title">AI HR Helpdesk</h1>
+                        <p class="app-subtitle">
+                            <span class="pulse-dot"></span> Instant Employee & HR Assistant
+                        </p>
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <button type="button" class="icon-btn" onclick="clearChat()" title="Reset & Clear Chat">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                    <button type="button" class="icon-btn" onclick="toggleHelpModal()" title="Help & Tips">
+                        <i class="fa-regular fa-circle-question"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Quick Topic Category Bar -->
+            <nav class="quick-topics-bar">
+                <span class="topics-label"><i class="fa-solid fa-bolt"></i> Popular:</span>
+                <div class="topics-scroll">
+                    <button type="button" class="topic-chip" onclick="sendQuickMessage('How do I apply for leave?')">
+                        <i class="fa-solid fa-calendar-minus"></i> Leave Policy
+                    </button>
+                    <button type="button" class="topic-chip" onclick="sendQuickMessage('When is salary credited?')">
+                        <i class="fa-solid fa-wallet"></i> Payday Date
+                    </button>
+                    <button type="button" class="topic-chip" onclick="sendQuickMessage('What are the office working hours?')">
+                        <i class="fa-solid fa-clock"></i> Office Timing
+                    </button>
+                    <button type="button" class="topic-chip" onclick="sendQuickMessage('What are the employee benefits?')">
+                        <i class="fa-solid fa-shield-heart"></i> Benefits
+                    </button>
+                    <button type="button" class="topic-chip" onclick="sendQuickMessage('How to replace lost ID card?')">
+                        <i class="fa-solid fa-id-card"></i> ID Card
+                    </button>
+                    <button type="button" class="topic-chip" onclick="sendQuickMessage('How do I contact HR?')">
+                        <i class="fa-solid fa-envelope"></i> Contact HR
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Chat Scroll Area -->
+            <div id="chat-box" class="chat-box">
+                
+                <!-- Welcome Banner for New Viewers (Default Placeholders) -->
+                <div id="welcome-view" class="welcome-view">
+                    <div class="welcome-badge">
+                        <i class="fa-solid fa-sparkles"></i> Welcome to HR Virtual Support
+                    </div>
+                    <h2 class="welcome-heading">What would you like to ask today?</h2>
+                    <p class="welcome-subtext">Click any of the suggested topics below or type your question to start instant chat.</p>
+
+                    <!-- Interactive Suggestion Placeholder Cards -->
+                    <div class="suggestion-grid">
+                        <div class="suggestion-card" onclick="sendQuickMessage('How do I apply for leave?')">
+                            <div class="card-icon icon-leave">
+                                <i class="fa-solid fa-umbrella-beach"></i>
+                            </div>
+                            <div class="card-text">
+                                <h3>Apply for Leave</h3>
+                                <p>"How do I submit a leave application?"</p>
+                            </div>
+                            <i class="fa-solid fa-arrow-right card-arrow"></i>
+                        </div>
+
+                        <div class="suggestion-card" onclick="sendQuickMessage('When will salary come?')">
+                            <div class="card-icon icon-salary">
+                                <i class="fa-solid fa-money-bill-wave"></i>
+                            </div>
+                            <div class="card-text">
+                                <h3>Payroll & Salary</h3>
+                                <p>"When will monthly salary be credited?"</p>
+                            </div>
+                            <i class="fa-solid fa-arrow-right card-arrow"></i>
+                        </div>
+
+                        <div class="suggestion-card" onclick="sendQuickMessage('What are your working hours?')">
+                            <div class="card-icon icon-timing">
+                                <i class="fa-solid fa-business-time"></i>
+                            </div>
+                            <div class="card-text">
+                                <h3>Office Hours</h3>
+                                <p>"What are the official working hours?"</p>
+                            </div>
+                            <i class="fa-solid fa-arrow-right card-arrow"></i>
+                        </div>
+
+                        <div class="suggestion-card" onclick="sendQuickMessage('Show me company holiday list')">
+                            <div class="card-icon icon-holiday">
+                                <i class="fa-solid fa-plane-departure"></i>
+                            </div>
+                            <div class="card-text">
+                                <h3>Holidays & Calendar</h3>
+                                <p>"Where can I view the company holiday list?"</p>
+                            </div>
+                            <i class="fa-solid fa-arrow-right card-arrow"></i>
+                        </div>
+
+                        <div class="suggestion-card" onclick="sendQuickMessage('What are the employee medical benefits?')">
+                            <div class="card-icon icon-benefits">
+                                <i class="fa-solid fa-briefcase-medical"></i>
+                            </div>
+                            <div class="card-text">
+                                <h3>Health & Benefits</h3>
+                                <p>"What insurance and perks are provided?"</p>
+                            </div>
+                            <i class="fa-solid fa-arrow-right card-arrow"></i>
+                        </div>
+
+                        <div class="suggestion-card" onclick="sendQuickMessage('How do I contact HR?')">
+                            <div class="card-icon icon-contact">
+                                <i class="fa-solid fa-headset"></i>
+                            </div>
+                            <div class="card-text">
+                                <h3>Contact HR Team</h3>
+                                <p>"What is HR email and phone contact?"</p>
+                            </div>
+                            <i class="fa-solid fa-arrow-right card-arrow"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Input Area -->
+            <footer class="input-container">
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-message input-icon"></i>
+                    <input 
+                        type="text" 
+                        id="user-input" 
+                        placeholder="Type an HR question (e.g. leave, salary date, attendance)..."
+                        autocomplete="off"
+                    >
+                    <button type="button" class="send-btn" id="send-btn" onclick="sendMessage()" title="Send Message">
+                        <span>Send</span>
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="input-footer-note">
+                    <span><i class="fa-solid fa-shield-halved"></i> Powered by Scikit-Learn NLP Pipeline • Private & Secure</span>
+                </div>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- Help Modal for New Users -->
+    <div id="help-modal" class="modal-overlay hidden" onclick="toggleHelpModal(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-circle-info"></i> How to Use AI Helpdesk</h3>
+                <button class="modal-close" onclick="toggleHelpModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>Welcome! This AI Assistant answers common workplace and HR queries instantly. Here are sample topics you can ask:</p>
+                <ul>
+                    <li><strong>Leave & Attendance:</strong> Ask about applying for leave, emergency leave, punch corrections.</li>
+                    <li><strong>Salary & Payroll:</strong> Ask about payday dates, pay slips, salary deductions.</li>
+                    <li><strong>Company Info:</strong> Ask about office hours, dress code, holidays, office location.</li>
+                    <li><strong>HR Requests:</strong> Ask about ID card replacements, onboarding documents, resignation process.</li>
+                </ul>
+                <p class="modal-tip">💡 <em>Tip: You can click any suggestion card on screen to get immediate answers!</em></p>
+            </div>
+            <div class="modal-footer">
+                <button class="primary-btn" onclick="toggleHelpModal()">Got it!</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>

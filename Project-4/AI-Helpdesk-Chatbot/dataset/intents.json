@@ -1,0 +1,397 @@
+{
+    "intents": [
+        {
+            "tag": "greeting",
+            "patterns": [
+                "Hi",
+                "Hello",
+                "Hey",
+                "Good morning",
+                "Good afternoon",
+                "Good evening",
+                "Hi there",
+                "Hello HR",
+                "Is anyone there?",
+                "Can you help me?"
+            ],
+            "responses": [
+                "Hello! Welcome to the HR Helpdesk. How can I assist you today?",
+                "Hi! I'm your HR Assistant. How may I help you?",
+                "Welcome! Please let me know your HR-related query."
+            ]
+        },
+        {
+            "tag": "goodbye",
+            "patterns": [
+                "Bye",
+                "Goodbye",
+                "See you",
+                "See you later",
+                "Take care",
+                "Exit",
+                "Quit",
+                "Thanks bye",
+                "Catch you later",
+                "Have a nice day"
+            ],
+            "responses": [
+                "Goodbye! Have a great day.",
+                "Thank you for contacting HR.",
+                "Take care! Feel free to contact us again."
+            ]
+        },
+        {
+            "tag": "thanks",
+            "patterns": [
+                "Thanks",
+                "Thank you",
+                "Thanks a lot",
+                "Appreciate it",
+                "Thank you so much",
+                "Great thanks",
+                "Awesome thanks",
+                "Much appreciated",
+                "Cool thanks",
+                "That's helpful"
+            ],
+            "responses": [
+                "You're welcome!",
+                "Happy to help.",
+                "Glad I could assist you."
+            ]
+        },
+        {
+            "tag": "leave_policy",
+            "patterns": [
+                "How do I apply for leave?",
+                "Leave application",
+                "I need leave",
+                "Emergency leave",
+                "Annual leave",
+                "Leave request",
+                "Can I take leave?",
+                "Leave approval",
+                "Leave process",
+                "Leave policy"
+            ],
+            "responses": [
+                "You can apply for leave through the HR portal.",
+                "Submit your leave request in the employee portal.",
+                "Your reporting manager will review your leave request."
+            ]
+        },
+        {
+            "tag": "working_hours",
+            "patterns": [
+                "Office timing",
+                "Working hours",
+                "When does the office open?",
+                "Office hours",
+                "What are your working hours?"
+            ],
+            "responses": [
+                "Our office hours are Monday to Friday, 9:00 AM to 6:00 PM."
+            ]
+        },
+        {
+            "tag": "office_hours",
+            "patterns": [
+                "Office hours",
+                "Working hours",
+                "Office timing",
+                "Business hours",
+                "Office schedule",
+                "When does office open?",
+                "Office open time",
+                "Office close time",
+                "Company timings",
+                "Working time"
+            ],
+            "responses": [
+                "Office hours are Monday to Friday, 9:00 AM to 6:00 PM.",
+                "Employees work from 9 AM to 6 PM.",
+                "The office operates on weekdays from 9 AM to 6 PM."
+            ]
+        },
+        {
+            "tag": "salary_date",
+            "patterns": [
+                "Salary date",
+                "Payday",
+                "When will salary come?",
+                "Payroll date",
+                "Salary credit",
+                "Salary timing",
+                "Monthly salary",
+                "When do we get paid?",
+                "Salary payment",
+                "Salary credited"
+            ],
+            "responses": [
+                "Salary is credited on the last working day of every month.",
+                "Payroll is processed on the last working day.",
+                "Please check the payroll calendar for salary dates."
+            ]
+        },
+        {
+            "tag": "payroll_issue",
+            "patterns": [
+                "Salary issue",
+                "Payroll issue",
+                "Salary not received",
+                "Incorrect salary",
+                "Missing salary",
+                "Payroll problem",
+                "Pay slip issue",
+                "Salary deduction",
+                "Wrong salary",
+                "Payroll error"
+            ],
+            "responses": [
+                "Please contact the Payroll team through the HR portal.",
+                "Raise a payroll ticket for salary-related issues.",
+                "HR will investigate your payroll concern."
+            ]
+        },
+        {
+            "tag": "attendance",
+            "patterns": [
+                "Attendance issue",
+                "Forgot to punch",
+                "Attendance correction",
+                "Biometric issue",
+                "Punch missed",
+                "Attendance not updated",
+                "Attendance portal",
+                "Attendance request",
+                "Attendance problem",
+                "Mark attendance"
+            ],
+            "responses": [
+                "Submit an attendance correction request through the HR portal.",
+                "Your manager may need to approve the correction.",
+                "HR will verify your attendance record."
+            ]
+        },
+        {
+            "tag": "holidays",
+            "patterns": [
+                "Holiday list",
+                "Holiday calendar",
+                "Company holidays",
+                "Upcoming holidays",
+                "Public holidays",
+                "Festival holidays",
+                "Official holidays",
+                "Holiday schedule",
+                "Next holiday",
+                "Company calendar"
+            ],
+            "responses": [
+                "The holiday calendar is available on the HR portal.",
+                "Please check the employee portal for holiday details.",
+                "You can find the official holiday list online."
+            ]
+        },
+        {
+            "tag": "employee_benefits",
+            "patterns": [
+                "Employee benefits",
+                "Health insurance",
+                "Medical benefits",
+                "Company benefits",
+                "Insurance policy",
+                "Employee perks",
+                "Benefits offered",
+                "PF details",
+                "Gratuity",
+                "Retirement benefits"
+            ],
+            "responses": [
+                "Employees receive health insurance, paid leave, and retirement benefits.",
+                "Benefit details are available on the HR portal.",
+                "Please refer to the employee handbook for benefit information."
+            ]
+        },
+        {
+            "tag": "hr_contact",
+            "patterns": [
+                "HR contact",
+                "HR email",
+                "Contact HR",
+                "HR phone number",
+                "Talk to HR",
+                "HR support",
+                "Who is HR?",
+                "Reach HR",
+                "Need HR help",
+                "HR department"
+            ],
+            "responses": [
+                "You can contact HR at hr@company.com.",
+                "HR support is available Monday to Friday during office hours.",
+                "Please use the employee portal to contact HR."
+            ]
+        },
+        {
+            "tag": "onboarding",
+            "patterns": [
+                "New employee",
+                "Joining process",
+                "Onboarding",
+                "Joining formalities",
+                "First day",
+                "New hire",
+                "Documents required",
+                "Employee onboarding",
+                "Joining documents",
+                "Orientation"
+            ],
+            "responses": [
+                "Complete your onboarding tasks through the employee portal.",
+                "Carry your identification documents on your first day.",
+                "HR will guide you through the onboarding process."
+            ]
+        },
+        {
+            "tag": "resignation",
+            "patterns": [
+                "How do I resign?",
+                "Resignation process",
+                "Notice period",
+                "Submit resignation",
+                "Leaving company",
+                "Exit process",
+                "Resign job",
+                "Resignation letter",
+                "Employee exit",
+                "Quit company"
+            ],
+            "responses": [
+                "Submit your resignation through the HR portal.",
+                "Please discuss your resignation with your manager.",
+                "Refer to the employee handbook for notice period details."
+            ]
+        },
+        {
+            "tag": "id_card",
+            "patterns": [
+                "Lost ID card",
+                "Need new ID card",
+                "Replace ID card",
+                "Employee ID",
+                "ID card issue",
+                "ID badge",
+                "Forgot ID",
+                "Duplicate ID",
+                "Access card",
+                "Office ID"
+            ],
+            "responses": [
+                "Please raise an ID card replacement request through HR.",
+                "HR will issue a replacement ID after verification.",
+                "Visit the HR desk with a valid identity proof."
+            ]
+        },
+        {
+            "tag": "dress_code",
+            "patterns": [
+                "Dress code",
+                "Office dress",
+                "Formal dress",
+                "Casual dress",
+                "Can I wear jeans?",
+                "Office clothing",
+                "Dress policy",
+                "Employee dress",
+                "Company dress code",
+                "Dress guidelines"
+            ],
+            "responses": [
+                "Employees are expected to follow the company's business casual dress code.",
+                "Please refer to the employee handbook for dress code guidelines.",
+                "Smart casual attire is recommended unless otherwise specified."
+            ]
+        },
+        {
+            "tag": "performance_review",
+            "patterns": [
+                "Performance review",
+                "Appraisal",
+                "Promotion",
+                "Performance evaluation",
+                "Annual review",
+                "Salary appraisal",
+                "Review cycle",
+                "Performance rating",
+                "Employee appraisal",
+                "Promotion process"
+            ],
+            "responses": [
+                "Performance reviews are conducted annually.",
+                "Your manager will discuss your appraisal during the review cycle.",
+                "Refer to the HR portal for appraisal timelines."
+            ]
+        },
+        {
+            "tag": "training",
+            "patterns": [
+                "Training programs",
+                "Learning portal",
+                "Employee training",
+                "Skill development",
+                "Certification",
+                "Training courses",
+                "Workshop",
+                "Learning opportunities",
+                "Online training",
+                "Internal training"
+            ],
+            "responses": [
+                "Training programs are available on the employee learning portal.",
+                "You can enroll in available courses through HR.",
+                "Speak with your manager about training opportunities."
+            ]
+        },
+        {
+            "tag": "reimbursement",
+            "patterns": [
+                "Travel reimbursement",
+                "Expense claim",
+                "Reimbursement process",
+                "Claim expenses",
+                "Medical reimbursement",
+                "Expense policy",
+                "Travel claim",
+                "Reimbursement status",
+                "Expense reimbursement",
+                "Claim request"
+            ],
+            "responses": [
+                "Submit reimbursement requests through the expense portal.",
+                "Attach all supporting bills before submitting your claim.",
+                "Finance will review and process approved reimbursements."
+            ]
+        },
+        {
+            "tag": "unknown",
+            "patterns": [
+                "asdf",
+                "xyz",
+                "random",
+                "blah",
+                "nothing",
+                "unknown",
+                "test random",
+                "dummy",
+                "sample",
+                "invalid"
+            ],
+            "responses": [
+                "I'm sorry, I couldn't understand your question. Could you rephrase it?",
+                "Please ask an HR-related question so I can assist you.",
+                "I don't have enough information to answer that. Please contact HR if needed."
+            ]
+        }
+    ]
+}
