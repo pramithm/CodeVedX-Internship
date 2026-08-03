@@ -1,4 +1,4 @@
-        # 🤖 AI HR Helpdesk Chatbot
+## 🤖 AI HR Helpdesk Chatbot
 
 An AI-powered HR Helpdesk Chatbot built using **Python, Flask, Machine Learning, and Natural Language Processing (NLP)**. The chatbot understands employee queries, predicts their intent using a trained Machine Learning model, and provides appropriate HR-related responses.
 
