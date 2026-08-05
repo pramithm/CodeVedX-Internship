@@ -1,4 +1,4 @@
-## 🤖 AI HR Helpdesk Chatbot
+## 🤖 AI HR Helpdesk Chatbot (Demo)[https://aichatbot-beige-seven.vercel.app/]
 
 An AI-powered HR Helpdesk Chatbot built using **Python, Flask, Machine Learning, and Natural Language Processing (NLP)**. The chatbot understands employee queries, predicts their intent using a trained Machine Learning model, and provides appropriate HR-related responses.
 
@@ -79,20 +79,6 @@ Retrieve Response
       │
       ▼
 Display Answer
-```
-
----
-
-## 📸 Screenshots
-
-Add screenshots here after completing the project.
-
-```
-Home Page
-
-Chat Interface
-
-Prediction Example
 ```
 
 ---
